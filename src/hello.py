@@ -6,4 +6,4 @@ import yfinance as yf
 print("hello world")
 
 
-returns = pd.read_csv('data/Stocks_returns.csv')
+returns = pd.read_csv('data/Stocks_returns.csv', index_col=0, parse_dates=True)
