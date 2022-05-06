@@ -1,3 +1,4 @@
+from xml.sax.xmlreader import IncrementalParser
 import yfinance as yf
 import torch
 import torch.nn as nn
@@ -7,14 +8,25 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
+import kit
 
-winners = ['ASHG.TA', 'BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
-           'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
-df = pd.read_csv('data/winner.csv', index_col=0, parse_dates=True)
-stock = df[['ASHG.TA']].copy()
-stock_future = stock.tail(1)
-print(stock_future)
+# winners = ['ASHG.TA', 'BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
+# 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
+start = "2010-01-01"
+end = "2022-03-31"
+df = yf.download('ASHG.TA', start, end)
+df.to_csv("data/ASHG.TA.csv")
+df = pd.read_csv("data/ASHG.TA.csv", header=0, index_col=0, parse_dates=[0])
+
+
+close = df.Close.copy()
+returns = close.pct_change().copy()
+returns.dropna(inplace=True)
+df = returns.resample('M').apply(kit.compound).to_period('M')
+stock = df[:-1].copy()
+print(df[-1])
+# print(stock)
 scaler = MinMaxScaler(feature_range=(-1, 1))
 df = scaler.fit_transform(df.values.reshape(-1, 1))
 
@@ -36,14 +48,13 @@ def load_data(stock, window_size):
 
 
 ws = 4
-x, y = load_data(stock, ws)
+x, y = load_data(df, ws)
 print('x.shape = ', x.shape)
 print('y.shape = ', y.shape)
 
 x = torch.from_numpy(x).type(torch.Tensor)
 
 y = torch.from_numpy(y).type(torch.Tensor)
-
 
 input_dim = 1
 hidden_dim = 128
@@ -74,7 +85,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(22)
+torch.manual_seed(29)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
@@ -90,7 +101,7 @@ hist = np.zeros(num_epochs)
 for t in range(num_epochs):
     # Initialise hidden state
     # Don't do this if you want your LSTM to be stateful
-    #model.hidden = model.init_hidden()
+    # model.hidden = model.init_hidden()
 
     # Forward pass
     y_train_pred = model(x)
@@ -108,11 +119,12 @@ for t in range(num_epochs):
 
     # Update parameters
     optimiser.step()
-
-
 y_pred = model(x)
+
 y_pred = y_pred.detach().numpy()
+
 y_pred = np.expand_dims(y_pred, axis=0)
+
 window_size = 4
 future = 1
 L = len(y)
@@ -125,7 +137,6 @@ for i in range(future):
     with torch.no_grad():
 
         preds.append(model(seq).item())
-
 ASHG = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
 ASHG = ASHG.astype(float)
 
