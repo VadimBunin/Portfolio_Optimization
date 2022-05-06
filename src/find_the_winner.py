@@ -29,4 +29,7 @@ for col in df:
 
         print('Looser', col, " ", round(acc, 3))
 
-print(winner)
+# print(winner)
+
+
+# df[winner].to_csv("data/winner.csv")
