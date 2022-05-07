@@ -13,12 +13,12 @@ import kit
 # winners = ['ASHG.TA', 'BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
-start = "2010-01-01"
+start = "2019-01-01"
 end = "2022-03-31"
 df = yf.download('ASHG.TA', start, end)
 df.to_csv("data/ASHG.TA.csv")
 df = pd.read_csv("data/ASHG.TA.csv", header=0, index_col=0, parse_dates=[0])
-
+print(df.head())
 
 close = df.Close.copy()
 returns = close.pct_change().copy()
@@ -85,7 +85,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(29)
+torch.manual_seed(74)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
