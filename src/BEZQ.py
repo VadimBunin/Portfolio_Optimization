@@ -1,32 +1,34 @@
 from doctest import DocFileCase
-from xml.sax.xmlreader import IncrementalParser
-import yfinance as yf
-import torch
-import torch.nn as nn
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.metrics import mean_squared_error, mean_absolute_error
 import kit
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import torch.nn as nn
+import torch
+import yfinance as yf
 
-# winners = ['ASHG.TA', 'BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
+
+# winners = ['ASHG.TA','BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
-start = "2019-01-01"
+start = "2014-01-01"
 end = "2022-03-31"
 df = yf.download('BEZQ.TA', start, end)
 df.to_csv("data/BEZQ.TA.csv")
 df = pd.read_csv("data/BEZQ.TA.csv", header=0, index_col=0, parse_dates=[0])
+print(df.head())
 
 close = df.Close.copy()
 returns = close.pct_change().copy()
 returns.dropna(inplace=True)
 df = returns.resample('M').apply(kit.compound).to_period('M')
-stock = df[:-1].copy()
 print(df[-1])
+df = df[:-1]
 
+# print(stock)
 scaler = MinMaxScaler(feature_range=(-1, 1))
 df = scaler.fit_transform(df.values.reshape(-1, 1))
 
@@ -85,7 +87,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(74)
+torch.manual_seed(22)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
@@ -137,6 +139,7 @@ for i in range(future):
     with torch.no_grad():
 
         preds.append(model(seq).item())
+
 BEZQ = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
 BEZQ = BEZQ.astype(float)
 
@@ -148,4 +151,4 @@ TA_m['BEZQ.TA'] = BEZQ
 
 print(TA_m.T)
 
-# TA_m.to_csv('data/Momentum.csv')
+TA_m.to_csv('data/Momentum.csv')

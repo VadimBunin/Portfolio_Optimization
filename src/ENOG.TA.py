@@ -11,14 +11,14 @@ import torch
 import yfinance as yf
 
 
-# winners = ['ASHG.TA', 'BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
+# winners = ['ASHG.TA','BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
 start = "2014-01-01"
 end = "2022-03-31"
-df = yf.download('ASHG.TA', start, end)
-df.to_csv("data/ASHG.TA.csv")
-df = pd.read_csv("data/ASHG.TA.csv", header=0, index_col=0, parse_dates=[0])
+df = yf.download('ENOG.TA', start, end)
+df.to_csv("data/ENOG.TA.csv")
+df = pd.read_csv("data/ENOG.TA.csv", header=0, index_col=0, parse_dates=[0])
 print(df.head())
 
 close = df.Close.copy()
@@ -87,7 +87,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(22)
+torch.manual_seed(78)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
@@ -139,14 +139,16 @@ for i in range(future):
     with torch.no_grad():
 
         preds.append(model(seq).item())
-ASHG = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
-ASHG = ASHG.astype(float)
 
-# print(ASHG)
+ENOG = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
+ENOG = ENOG.astype(float)
 
-TA_m = pd.DataFrame(ASHG, columns=["ASHG.TA"])
+print(ENOG)
 
-print(TA_m)
-TA_m = TA_m.rename(index={0: 'Expected Returns'})
+TA_m = pd.read_csv('data/Momentum.csv', index_col=0)
+
+TA_m['ENOG.TA'] = ENOG
+
+print(TA_m.T)
 
 TA_m.to_csv('data/Momentum.csv')
