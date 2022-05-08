@@ -87,7 +87,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(78)
+torch.manual_seed(22)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
