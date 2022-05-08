@@ -25,8 +25,8 @@ cov = history_winners.cov()
 
 er_v = er.values
 er_w = np.squeeze(er_v)
-#kit.plot_ef(20, er_w, cov)
-# plt.show()
+kit.plot_ef(20, er_w, cov)
+plt.show()
 
 
 weights = kit.optimal_weights(20, er_w, cov)
