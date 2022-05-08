@@ -14,7 +14,7 @@ import yfinance as yf
 # winners = ['ASHG.TA','BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
-start = "2019-01-01"
+start = "2014-01-01"
 end = "2022-03-31"
 df = yf.download('ENOG.TA', start, end)
 df.to_csv("data/ENOG.TA.csv")
