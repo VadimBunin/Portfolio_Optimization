@@ -65,14 +65,16 @@ output_dim = 1
 
 
 class LSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
+    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.0):
         super(LSTM, self).__init__()
 
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
 
         self.lstm = nn.LSTM(input_dim, hidden_dim,
-                            num_layers, batch_first=True)
+                            num_layers, dropout=drop_prob, batch_first=True)
+
+        self.dropout = nn.Dropout(drop_prob)
 
         self.fc = nn.Linear(hidden_dim, output_dim)
 

@@ -7,15 +7,18 @@ df = pd.read_csv('data/ta_35_monthly_returns.csv',
 
 # returns for the last 6 month
 
-six_month = df[-6:]
+df = df.to_period('M')
+# print(df)
+six_month = df[-7:-1]
+# print(six_month)
 
 
 winner = []
-for col in df:
+for col in six_month:
 
     acc = ((1+six_month[col]).prod() - 1)
 
-    if acc > ((1+six_month['TA35.TA']+.018).prod() - 1):
+    if acc > ((1+six_month['TA35.TA']+.02).prod() - 1):
 
         winner.append(col)
 

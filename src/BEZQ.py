@@ -14,11 +14,11 @@ import yfinance as yf
 # winners = ['ASHG.TA','BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
-start = "2019-01-01"
+start = "2014-01-01"
 end = "2022-03-31"
 df = yf.download('BEZQ.TA', start, end)
-df.to_csv("data/BEZQ.TA.csv")
-df = pd.read_csv("data/BEZQ.TA.csv", header=0, index_col=0, parse_dates=[0])
+df.to_csv("data/'BEZQ.TA.csv")
+df = pd.read_csv("data/'BEZQ.TA.csv", header=0, index_col=0, parse_dates=[0])
 print(df.head())
 
 close = df.Close.copy()
@@ -65,14 +65,16 @@ output_dim = 1
 
 
 class LSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers, output_dim):
+    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.0):
         super(LSTM, self).__init__()
 
         self.hidden_dim = hidden_dim
         self.num_layers = num_layers
 
         self.lstm = nn.LSTM(input_dim, hidden_dim,
-                            num_layers, batch_first=True)
+                            num_layers, dropout=drop_prob, batch_first=True)
+
+        self.dropout = nn.Dropout(drop_prob)
 
         self.fc = nn.Linear(hidden_dim, output_dim)
 

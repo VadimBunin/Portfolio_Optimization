@@ -14,7 +14,7 @@ import yfinance as yf
 # winners = ['ASHG.TA','BEZQ.TA', 'ENOG.TA', 'ESLT.TA',
 # 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']
 
-start = "2019-01-01"
+start = "2014-01-01"
 end = "2022-03-31"
 df = yf.download('ESLT.TA', start, end)
 df.to_csv("data/'ESLT.TA.csv")
@@ -65,7 +65,7 @@ output_dim = 1
 
 
 class LSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.2):
+    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.3):
         super(LSTM, self).__init__()
 
         self.hidden_dim = hidden_dim
@@ -89,7 +89,7 @@ class LSTM(nn.Module):
         return out
 
 
-torch.manual_seed(22)
+torch.manual_seed(78)
 
 model = LSTM(input_dim=input_dim, hidden_dim=hidden_dim,
              output_dim=output_dim, num_layers=num_layers)
@@ -101,13 +101,8 @@ optimiser = torch.optim.Adam(model.parameters(), lr=0.01)
 num_epochs = 901
 hist = np.zeros(num_epochs)
 
-
 for t in range(num_epochs):
-    # Initialise hidden state
-    # Don't do this if you want your LSTM to be stateful
-    # model.hidden = model.init_hidden()
 
-    # Forward pass
     y_train_pred = model(x)
 
     loss = criterion(y_train_pred, y)
@@ -115,14 +110,12 @@ for t in range(num_epochs):
         print("Epoch ", t, "MSE: ", loss.item())
     hist[t] = loss.item()
 
-    # Zero out gradient, else they will accumulate between epochs
     optimiser.zero_grad()
 
-    # Backward pass
     loss.backward()
 
-    # Update parameters
     optimiser.step()
+
 y_pred = model(x)
 
 y_pred = y_pred.detach().numpy()

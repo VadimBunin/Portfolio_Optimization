@@ -65,7 +65,7 @@ output_dim = 1
 
 
 class LSTM(nn.Module):
-    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.3):
+    def __init__(self, input_dim, hidden_dim, num_layers,  output_dim, drop_prob=0.1):
         super(LSTM, self).__init__()
 
         self.hidden_dim = hidden_dim

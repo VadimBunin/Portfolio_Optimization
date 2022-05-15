@@ -1,0 +1,25 @@
+import kit
+from sklearn.metrics import mean_squared_error, mean_absolute_error
+from sklearn.preprocessing import MinMaxScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+import torch.nn as nn
+import torch
+import yfinance as yf
+
+start = "2017-01-01"
+end = "2022-03-31"
+df = yf.download('TSEM.TA', start, end)
+df.to_csv("data/TSEM.TA.csv")
+df = pd.read_csv("data/TSEM.TA.csv", header=0, index_col=0, parse_dates=[0])
+print(df.head())
+
+close = df.Close.copy()
+returns = close.pct_change().copy()
+returns.dropna(inplace=True)
+df = returns.resample('M').apply(kit.compound).to_period('M')
+
+av_ret = np.mean(df)
+print(av_ret)
