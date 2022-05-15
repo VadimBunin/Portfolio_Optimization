@@ -18,10 +18,10 @@ er = stocks.T
 
 sr = pd.read_csv("data/Stocks_returns.csv")
 history_winners = sr[['ASHG.TA', 'BEZQ.TA', 'ENOG.TA',
-                      'ESLT.TA', 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA']]
+                      'ESLT.TA', 'ICL.TA', 'LUMI.TA']]
 
 cov = history_winners.cov()
-# print(cov)
+print(cov)
 
 er_v = er.values
 er_w = np.squeeze(er_v)
@@ -33,7 +33,7 @@ weights = kit.optimal_weights(20, er_w, cov)
 # print(weights)
 
 vs = pd.DataFrame(np.round(weights, 3), columns=['ASHG.TA', 'BEZQ.TA', 'ENOG.TA',
-                                                 'ESLT.TA', 'ICL.TA', 'KEN.TA', 'LUMI.TA', 'TSEM.TA'])
+                                                 'ESLT.TA', 'ICL.TA',  'LUMI.TA'])
 
 
 returns = vs.copy()

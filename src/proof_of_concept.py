@@ -7,7 +7,7 @@ import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-df_leumi = pd.read_csv("data/LUMI.TA.csv", parse_dates=True, index_col=0)
+df_leumi = pd.read_csv("data/BEZQ.TA.csv", parse_dates=True, index_col=0)
 df_leumi = df_leumi[['Close']]
 df_leumi.plot(figsize=(10, 6))
 #plt.title('Leumi Stock History')
@@ -93,7 +93,7 @@ optimiser = torch.optim.Adam(model.parameters(), lr=0.01)
 
 # Train the model
 
-num_epochs = 300
+num_epochs = 250
 hist = np.zeros(num_epochs)
 
 
@@ -128,6 +128,8 @@ y_test = scaler.inverse_transform(y_test.detach().numpy())
 
 # MSE, RMSE
 
+MAE_tr = mean_absolute_error(y_train[:, 0], y_train_pred[:, 0])
+print(MAE_tr)
 MAE = mean_absolute_error(y_test[:, 0], y_test_pred[:, 0])
 print('Test Score: %.2f MSE' % (MAE))
 RMSE = np.sqrt(mean_squared_error(y_test[:, 0], y_test_pred[:, 0]))
@@ -137,14 +139,15 @@ df_leumi = pd.read_csv("data/LUMI.TA.csv", parse_dates=True, index_col=0)
 df_leumi = df_leumi[['Close']]
 
 # Visualising the results
-figure, axes = plt.subplots(figsize=(15, 6))
+figure, axes = plt.subplots(figsize=(8, 3))
 axes.xaxis_date()
 
 axes.plot(df_leumi[len(df_leumi)-len(y_test):].index, y_test,
-          color='red', label='Leumi History Stock Price')
+          color='red', label='BEZEQ History Stock Price')
 axes.plot(df_leumi[len(df_leumi)-len(y_test):].index, y_test_pred,
-          color='blue', label='Predicted Leumi Stock Price')
+          color='blue', label='Predicted BEZEQ Stock Price')
 # axes.xticks(np.arange(0,394,50))
-plt.title('Leumi Stock Price Prediction')
-plt.ylabel('Leumi Stock Price')
+plt.title('BEZEQ Stock Price Prediction')
+plt.ylabel('BEZEQ Stock Price')
 plt.legend()
+plt.show()

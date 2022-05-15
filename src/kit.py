@@ -5,9 +5,7 @@ from scipy.optimize import minimize
 
 
 def compound(r):
-    """
-    returns the result of compounding the set of returns in r
-    """
+
     return np.expm1(np.log1p(r).sum())
 
 
@@ -76,8 +74,8 @@ def minimize_vol(target_return, er, cov):
     """
     n = er.shape[0]
     init_guess = np.repeat(1/n, n)
-    bounds = ((0.0, 1.0),) * n  # an N-tuple of 2-tuples!
-    # construct the constraints
+    bounds = ((0.0, 1.0),) * n
+
     weights_sum_to_1 = {'type': 'eq',
                         'fun': lambda weights: np.sum(weights) - 1
                         }
@@ -113,27 +111,4 @@ def plot_ef(n_points, er, cov):
         "Returns": rets,
         "Volatility": vols
     })
-    return ef.plot.line(x="Volatility", y="Returns", style='.-', legend=False)
-
-
-def optimal_weights(n_points, er, cov):
-    """
-    """
-    target_rs = np.linspace(er.min(), er.max(), n_points)
-    weights = [minimize_vol(target_return, er, cov)
-               for target_return in target_rs]
-    return weights
-
-
-def plot_ef(n_points, er, cov):
-    """
-    Plots the multi-asset efficient frontier
-    """
-    weights = optimal_weights(n_points, er, cov)
-    rets = [portfolio_return(w, er) for w in weights]
-    vols = [portfolio_vol(w, cov) for w in weights]
-    ef = pd.DataFrame({
-        "Returns": rets,
-        "Volatility": vols
-    })
-    return ef.plot.line(x="Volatility", y="Returns", style='.-', legend=False)
+    return ef.plot.line(x="Volatility", y="Returns", style='.-', legend=True)
