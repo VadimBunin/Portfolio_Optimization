@@ -7,13 +7,13 @@ import seaborn as sns
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
-df_leumi = pd.read_csv("data/BEZQ.TA.csv", parse_dates=True, index_col=0)
-df_leumi = df_leumi[['Close']]
-df_leumi.plot(figsize=(10, 6))
+df_bezeq = pd.read_csv("data/BEZQ.TA.csv", parse_dates=True, index_col=0)
+df_bezeq = df_bezeq[['Close']]
+df_bezeq.plot(figsize=(10, 6))
 #plt.title('Leumi Stock History')
 # plt.show()
 scaler = MinMaxScaler(feature_range=(-1, 1))
-df_leumi = scaler.fit_transform(df_leumi.values.reshape(-1, 1))
+df_bezeq = scaler.fit_transform(df_bezeq.values.reshape(-1, 1))
 
 # Create Seqs and Labels
 
@@ -40,7 +40,7 @@ def load_data(stock, window_size):
 
 
 ws = 63
-x_train, y_train, x_test, y_test = load_data(df_leumi, ws)
+x_train, y_train, x_test, y_test = load_data(df_bezeq, ws)
 print('x_train.shape = ', x_train.shape)
 print('y_train.shape = ', y_train.shape)
 print('x_test.shape = ', x_test.shape)
@@ -135,16 +135,16 @@ print('Test Score: %.2f MSE' % (MAE))
 RMSE = np.sqrt(mean_squared_error(y_test[:, 0], y_test_pred[:, 0]))
 print('Test Score: %.2f RMSE' % (RMSE))
 
-df_leumi = pd.read_csv("data/LUMI.TA.csv", parse_dates=True, index_col=0)
-df_leumi = df_leumi[['Close']]
+df_bezeq = pd.read_csv("data/BEZQ.TA.csv", parse_dates=True, index_col=0)
+df_bezeq = df_bezeq[['Close']]
 
 # Visualising the results
 figure, axes = plt.subplots(figsize=(8, 3))
 axes.xaxis_date()
 
-axes.plot(df_leumi[len(df_leumi)-len(y_test):].index, y_test,
+axes.plot(df_bezeq[len(df_bezeq)-len(y_test):].index, y_test,
           color='red', label='BEZEQ History Stock Price')
-axes.plot(df_leumi[len(df_leumi)-len(y_test):].index, y_test_pred,
+axes.plot(df_bezeq[len(df_bezeq)-len(y_test):].index, y_test_pred,
           color='blue', label='Predicted BEZEQ Stock Price')
 # axes.xticks(np.arange(0,394,50))
 plt.title('BEZEQ Stock Price Prediction')

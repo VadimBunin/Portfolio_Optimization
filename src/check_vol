@@ -1,0 +1,10 @@
+import numpy as numpy
+import pandas as pd
+from pyparsing import col
+
+df = pd.read_csv("data/Stocks_returns.csv", index_col=0, parse_dates=True)
+df = df[['ASHG.TA', 'BEZQ.TA', 'ENOG.TA',
+        'ESLT.TA', 'ICL.TA', 'LUMI.TA']]
+
+df = df['2022-02':]
+print(df.std())
