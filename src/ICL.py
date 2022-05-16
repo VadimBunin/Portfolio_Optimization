@@ -81,10 +81,10 @@ class LSTM(nn.Module):
     def forward(self, x):
 
         h0 = torch.zeros(self.num_layers, x.size(
-            0), self.hidden_dim).requires_grad_()
+            0), self.hidden_dim)
         c0 = torch.zeros(self.num_layers, x.size(
-            0), self.hidden_dim).requires_grad_()
-        out, (hn, cn) = self.lstm(x, (h0.detach(), c0.detach()))
+            0), self.hidden_dim)
+        out, (hn, cn) = self.lstm(x, (h0, c0))
         out = self.fc(out[:, -1, :])
         return out
 
