@@ -5,7 +5,7 @@ import seaborn as sns
 import kit
 from scipy.optimize import minimize
 
-df = pd.read_csv("data/Momentum_Preds.csv", index_col=0)
+df = pd.read_csv("data/Momentum_Pred.csv", index_col=0)
 
 
 stocks = pd.DataFrame(df)
