@@ -145,12 +145,11 @@ for i in range(future):
 BEZQ = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
 BEZQ = BEZQ.astype(float)
 
-print(BEZQ)
 
-TA_m = pd.read_csv('data/Momentum.csv', index_col=0)
+TA_m = pd.read_csv('data/Momentum_Pred.csv', index_col=0)
 
 TA_m['BEZQ.TA'] = BEZQ
 
-print(TA_m.T)
+print(TA_m)
 
-TA_m.to_csv('data/Momentum.csv')
+TA_m.to_csv('data/Momentum_Pred.csv')

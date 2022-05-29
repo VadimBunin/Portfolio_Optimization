@@ -138,12 +138,11 @@ for i in range(future):
 ESLT = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
 ESLT = ESLT.astype(float)
 
-print(ESLT)
 
-TA_m = pd.read_csv('data/Momentum.csv', index_col=0)
+TA_m = pd.read_csv('data/Momentum_Pred.csv', index_col=0)
 
 TA_m['ESLT.TA'] = ESLT
 
 print(TA_m.T)
 
-TA_m.to_csv('data/Momentum.csv')
+TA_m.to_csv('data/Momentum_Pred.csv')

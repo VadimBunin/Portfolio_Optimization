@@ -145,11 +145,9 @@ for i in range(future):
 LUMI = scaler.inverse_transform(np.array(preds[-1]).reshape(-1, 1))
 LUMI = LUMI.astype(float)
 
-print(LUMI)
-
-TA_m = pd.read_csv('data/Momentum.csv', index_col=0)
+TA_m = pd.read_csv('data/Momentum_Pred.csv', index_col=0)
 
 TA_m['LUMI.TA'] = LUMI
 print(TA_m.T)
 
-TA_m.to_csv('data/Momentum.csv')
+TA_m.to_csv('data/Momentum_Pred.csv')
