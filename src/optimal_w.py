@@ -6,14 +6,15 @@ import kit
 
 # winners =
 
-df = pd.read_csv("data/Momentum.csv", index_col=0)
-# print(df)
+df = pd.read_csv("data/Momentum_Preds.csv", index_col=0)
+
+df = df.drop('KEN.TA', axis=1)
 
 stocks = pd.DataFrame(df)
 
-# print(stocks.T)
 
 er = stocks.T
+print(er.shape)
 
 
 sr = pd.read_csv("data/Stocks_returns.csv")
@@ -24,9 +25,11 @@ cov = history_winners.cov()
 print(cov)
 
 er_v = er.values
+print(er_v.shape)
 er_w = np.squeeze(er_v)
-kit.plot_ef(20, er_w, cov)
-plt.show()
+print(er_w.shape)
+#kit.plot_ef(20, er_w, cov)
+# plt.show()
 
 
 weights = kit.optimal_weights(20, er_w, cov)
